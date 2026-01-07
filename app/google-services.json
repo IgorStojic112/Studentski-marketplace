@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253884758316",
+    "project_id": "m847921",
+    "storage_bucket": "m847921.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253884758316:android:1a39a2d2b0204eadb05489",
+        "android_client_info": {
+          "package_name": "ba.sum.fsre.studentskimarketplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDegFQW_IvEf9JWpiqDJC6LSgAYZxw7ylg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
