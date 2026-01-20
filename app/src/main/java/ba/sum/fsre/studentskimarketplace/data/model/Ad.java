@@ -18,4 +18,13 @@ public class Ad {
     public String getFaculty() { return faculty; }
     public Double getPrice() { return price; }
     public String getCreated_at() { return created_at; }
+
+    public void setId(String id) { this.id = id; }
+    public void setUser_id(String user_id) { this.user_id = user_id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setFaculty(String faculty) { this.faculty = faculty; }
+    public void setPrice(Double price) { this.price = price; }
+    public void setCreated_at(String created_at) { this.created_at = created_at; }
 }
+
