@@ -23,7 +23,7 @@ public class AdsRepository {
             q.put("title", "ilike.*" + titleQuery.trim() + "*");
         }
         if (faculty != null && !faculty.trim().isEmpty()) {
-            q.put("faculty", "eq." + faculty.trim());
+            q.put("faculty", "ilike." + faculty.trim());
         }
 
         client.get("/ads", q, cb);
