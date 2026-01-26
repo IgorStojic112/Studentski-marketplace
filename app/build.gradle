@@ -1,52 +1,55 @@
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.google.gms.google.services)
-}
-
-def supabaseUrl = project.properties["SUPABASE_URL"] ?: ""
-def supabaseAnonKey = project.properties["SUPABASE_ANON_KEY"] ?: ""
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    buildFeatures {
-        buildConfig true
-    }
     namespace 'ba.sum.fsre.studentskimarketplace'
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk 34
 
     defaultConfig {
         applicationId "ba.sum.fsre.studentskimarketplace"
         minSdk 21
-        targetSdk 36
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "SUPABASE_URL", "\"${supabaseUrl}\""
-        buildConfigField "String", "SUPABASE_ANON_KEY", "\"${supabaseAnonKey}\""
+
+        buildConfigField "String", "SUPABASE_URL", "\"https://srnlvpmnoywqwysvgile.supabase.co\""
+        buildConfigField "String", "SUPABASE_ANON_KEY", "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybmx2cG1ub3l3cXd5c3ZnaWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzOTc2OTUsImV4cCI6MjA4Mzk3MzY5NX0.oeMe5p5pdxzWTKPwgaoWL23ZKUVUs3nApm5hHeTOO5Y\""
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    buildFeatures {
+        buildConfig true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
 }
 
 dependencies {
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    //implementation libs.firebase.auth
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
-    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.activity:activity:1.8.0' // Ključna linija
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Supabase
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Kotlin i Ktor
+    implementation "io.github.jan-tennert.supabase:realtime-kt:2.5.0"
+    implementation "io.ktor:ktor-client-android:2.3.12"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
