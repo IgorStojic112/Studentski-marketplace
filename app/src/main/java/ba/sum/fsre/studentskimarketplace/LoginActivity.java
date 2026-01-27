@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private void doLogin() {
         if (SupabaseConfig.SUPABASE_URL == null || SupabaseConfig.SUPABASE_URL.trim().isEmpty()
                 || SupabaseConfig.SUPABASE_ANON_KEY == null || SupabaseConfig.SUPABASE_ANON_KEY.trim().isEmpty()) {
-            Toast.makeText(this, "SUPABASE_URL ili SUPABASE_ANON_KEY nisu postavljeni.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             setLoading(false);
                             Toast.makeText(LoginActivity.this,
-                                    "Login OK, ali nedostaje token ili userId.", Toast.LENGTH_LONG).show();
+                                    "", Toast.LENGTH_LONG).show();
                         });
                         return;
                     }
