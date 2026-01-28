@@ -39,7 +39,16 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.VH> {
     }
     public void setItems(List<Ad> newItems) {
         items.clear();
-        if (newItems != null) items.addAll(newItems);
+        favoriteIds.clear();
+
+        if (newItems != null) {
+            for(Ad ad : newItems){
+                items.add(ad);
+                if(ad.getId() != null){
+                    favoriteIds.add(ad.getId());
+                }
+            }
+        }
         notifyDataSetChanged();
     }
     @NonNull

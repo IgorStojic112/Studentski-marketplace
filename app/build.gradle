@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-def supabaseUrl = project.properties["SUPABASE_URL"] ?: ""
-def supabaseAnonKey = project.properties["SUPABASE_ANON_KEY"] ?: ""
+def supabaseUrl = project.properties["SUPABASE_URL"] ?: "https://srnlvpmnoywqwysvgile.supabase.co"
+def supabaseAnonKey = project.properties["SUPABASE_ANON_KEY"] ?: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybmx2cG1ub3l3cXd5c3ZnaWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzOTc2OTUsImV4cCI6MjA4Mzk3MzY5NX0.oeMe5p5pdxzWTKPwgaoWL23ZKUVUs3nApm5hHeTOO5Y"
 
 android {
     buildFeatures {

@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Uspješan login!", Toast.LENGTH_SHORT).show();
 
                         Intent i = new Intent(LoginActivity.this,
-                                ba.sum.fsre.studentskimarketplace.ui.SearchActivity.class);
+                                ba.sum.fsre.studentskimarketplace.ui.FavoriteActivity.class);
                         startActivity(i);
                         finish();
                     });
