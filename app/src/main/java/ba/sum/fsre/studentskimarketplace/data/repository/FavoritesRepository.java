@@ -13,7 +13,6 @@ public class FavoritesRepository {
     public FavoritesRepository(SupabaseRestClient client) {
         this.client = client;
     }
-
     public void listMyFavorites(String accessToken, Callback cb) {
         Map<String, String> q = new HashMap<>();
         q.put("select", "ad_id,created_at");
@@ -21,7 +20,6 @@ public class FavoritesRepository {
 
         client.get("/favorites", q, accessToken, cb);
     }
-
     public void addFavorite(String accessToken, String userId, String adId, Callback cb) {
         String body = "{"
                 + "\"user_id\":\"" + userId + "\","
@@ -30,7 +28,6 @@ public class FavoritesRepository {
 
         client.post("/favorites", body, accessToken, cb);
     }
-
     public void removeFavorite(String accessToken, String userId, String adId, Callback cb) {
         Map<String, String> q = new HashMap<>();
         q.put("user_id", "eq." + userId);
