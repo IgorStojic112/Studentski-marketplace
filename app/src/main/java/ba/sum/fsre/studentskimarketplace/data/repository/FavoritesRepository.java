@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ba.sum.fsre.studentskimarketplace.data.network.SupabaseRestClient;
+import ba.sum.fsre.studentskimarketplace.data.session.AuthSession;
 import okhttp3.Callback;
 
 public class FavoritesRepository {
 
     private final SupabaseRestClient client;
+
 
     public FavoritesRepository(SupabaseRestClient client) {
         this.client = client;
@@ -34,5 +36,13 @@ public class FavoritesRepository {
         q.put("ad_id", "eq." + adId);
 
         client.delete("/favorites", q, accessToken, cb);
+    }
+
+    public void getFavorites (String accessToken, String userId, Callback callback){
+        Map <String, String> query = new HashMap<>();
+        query.put("user_id", "eq." + userId);
+        query.put("select", "ads(*)");
+
+        client.get("/favorites", query,accessToken,callback);
     }
 }

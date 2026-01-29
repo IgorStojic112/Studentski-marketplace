@@ -39,6 +39,7 @@
         <activity
             android:name=".ui.EditAdActivity"
             android:exported="false"/>
+ 
 
 
     </application>
