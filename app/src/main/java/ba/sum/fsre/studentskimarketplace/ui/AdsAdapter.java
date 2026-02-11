@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ba.sum.fsre.studentskimarketplace.ChatActivity;
 import ba.sum.fsre.studentskimarketplace.R;
 import ba.sum.fsre.studentskimarketplace.data.model.Ad;
 import ba.sum.fsre.studentskimarketplace.data.repository.FavoritesRepository;
@@ -139,6 +138,7 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.VH> {
                 toast(ctx, "Za favorite je potreban login.");
                 return;
             }
+
             boolean nowFav = !favoriteIds.contains(adId);
 
             if (nowFav) favoriteIds.add(adId); else favoriteIds.remove(adId);

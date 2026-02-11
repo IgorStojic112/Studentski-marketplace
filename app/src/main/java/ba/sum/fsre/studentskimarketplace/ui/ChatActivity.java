@@ -1,4 +1,4 @@
-package ba.sum.fsre.studentskimarketplace;
+package ba.sum.fsre.studentskimarketplace.ui;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+
+import ba.sum.fsre.studentskimarketplace.R;
+import ba.sum.fsre.studentskimarketplace.data.model.ChatMessage;
 
 public class ChatActivity extends AppCompatActivity {
 

@@ -15,7 +15,7 @@
         android:theme="@style/Theme.StudentskiMarketplace">
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +26,26 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
 
         <activity
-            android:name=".ChatActivity"
+            android:name=".ui.ChatActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.FavoriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SearchActivity"
+            android:exported="false" />
+        <activity android:name=".ui.ProfileActivity"
+            android:label="Profil" />
+        <activity android:name=".ui.CreateAdActivity"
+            android:label="CreateAd" />
+        <activity android:name=".ui.EditAdActivity"
+            android:label="CreateAd" />
+
 
     </application>
 

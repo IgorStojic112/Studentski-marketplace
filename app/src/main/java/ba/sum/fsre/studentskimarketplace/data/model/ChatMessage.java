@@ -1,4 +1,4 @@
-package ba.sum.fsre.studentskimarketplace;
+package ba.sum.fsre.studentskimarketplace.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

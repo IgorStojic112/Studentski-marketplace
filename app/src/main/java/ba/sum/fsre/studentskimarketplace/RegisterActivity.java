@@ -9,6 +9,11 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
+import ba.sum.fsre.studentskimarketplace.ui.ChatActivity;
+import kotlinx.serialization.json.Json;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailField, passField, nameField, facultyField;
@@ -67,9 +72,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && responseData.contains("\"id\":\"")) {
                     // Izvlačenje ID-a korisnika iz odgovora
-                    String userId = responseData.split("\"id\":\"")[1].split("\"")[0];
+                    JSONObject jsonObject = new JSONObject(responseData);
+                    String accessToken = jsonObject.getString("access_token");
+                    String userId = jsonObject.getJSONObject("user").getString("id");
+
+                    //String userId = responseData.split("\"id\":\"")[1].split("\"")[0];
                     // Sada spremi ostale podatke u profiles
-                    saveToProfiles(userId, name, faculty, email);
+                    saveToProfiles(userId, name, faculty, email,accessToken);
+
                 } else {
                     showToast("Registracija neuspješna: Provjerite mail ili lozinku (min. 6 znakova)");
                 }
@@ -79,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void saveToProfiles(String userId, String name, String faculty, String email) {
+    private void saveToProfiles(String userId, String name, String faculty, String email, String accessToken) {
         // URL ide na profiles tablicu
         String url = SUPABASE_URL + "/rest/v1/profiles";
 
@@ -92,10 +102,11 @@ public class RegisterActivity extends AppCompatActivity {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("apikey", SUPABASE_KEY)
-                .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + accessToken)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Prefer", "return=minimal")
                 .post(body)
+                .addHeader("Prefer", "resolution=merge-duplicates")
                 .build();
 
         new Thread(() -> {

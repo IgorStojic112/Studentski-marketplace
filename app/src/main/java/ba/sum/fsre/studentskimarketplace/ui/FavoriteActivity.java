@@ -13,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ba.sum.fsre.studentskimarketplace.R;
@@ -42,15 +45,33 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-
         progressBar = findViewById(R.id.progress);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if(id == R.id.nav_favorites){
+                return true;
+            }
+            if (id == R.id.nav_search){
+                startActivity(new Intent(this,SearchActivity.class));
+                finish();
+            }else if(id == R.id.nav_chat){
+                startActivity(new Intent(this, ChatActivity.class));
+                finish();
+            }else if (id == R.id.nav_profile){
+                startActivity(new Intent(this, ProfileActivity.class));
+                finish();
+            }
+
+            return true;
+        });
 
         ImageButton btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(v -> {
             startActivity(new Intent(FavoriteActivity.this, SearchActivity.class));
         });
-
-
 
         RecyclerView rv = findViewById(R.id.rvFavorites);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -95,7 +116,18 @@ public class FavoriteActivity extends AppCompatActivity {
                 String body = response.body().string();
                 List<Ad> ads = parseAds(body);
                 runOnUiThread(() -> {
-                        adapter.setItems(ads);
+
+                        if(adapter != null){
+
+                            HashSet<String> favIds = new HashSet<>();
+                            for (Ad ad: ads){
+                                if(ad.getId() != null){
+                                    favIds.add(ad.getId());
+                                }
+                            }
+                            adapter.setFavoriteIds(favIds);
+                            adapter.setItems(ads);
+                        }
                         progressBar.setVisibility(View.GONE);
                     }
                 );
@@ -129,6 +161,10 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         } catch (Exception ignore) {}
         return list;
+    }
+
+    public void refreshFavorites(){
+        loadFavorites();
     }
 
 

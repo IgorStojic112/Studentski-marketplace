@@ -1,4 +1,4 @@
-package ba.sum.fsre.studentskimarketplace;
+package ba.sum.fsre.studentskimarketplace.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+
+import ba.sum.fsre.studentskimarketplace.R;
+import ba.sum.fsre.studentskimarketplace.data.model.ChatMessage;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
     private List<ChatMessage> messageList;
