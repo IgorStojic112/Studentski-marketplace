@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private ProgressBar progress;
     private TextView tvRegister;
+    private String loginBtnText = "Prijavi se";
     private final OkHttpClient http = new OkHttpClient();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        loginBtnText = btnLogin.getText().toString();
         progress = findViewById(R.id.progress);
         tvRegister = findViewById(R.id.tvRegister);
         btnLogin.setOnClickListener(v -> doLogin());
@@ -132,5 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         etEmail.setEnabled(!loading);
         etPassword.setEnabled(!loading);
         tvRegister.setEnabled(!loading);
+        btnLogin.setText(loading ? "Prijavljujem..." : loginBtnText);
     }
+
 }

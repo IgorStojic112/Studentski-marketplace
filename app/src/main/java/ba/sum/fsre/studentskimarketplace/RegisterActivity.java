@@ -2,133 +2,143 @@ package ba.sum.fsre.studentskimarketplace;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 
-import ba.sum.fsre.studentskimarketplace.ui.ChatActivity;
-import kotlinx.serialization.json.Json;
+import java.io.IOException;
+
+import ba.sum.fsre.studentskimarketplace.data.network.SupabaseConfig;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "REGISTER";
 
-    private EditText emailField, passField, nameField, facultyField;
+    private EditText emailField, passField, confirmPassField, nameField;
     private Button btnRegister;
-
-    //SUPABASE
-    private static final String SUPABASE_URL = "https://srnlvpmnoywqwysvgile.supabase.co";
-    private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybmx2cG1ub3l3cXd5c3ZnaWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzOTc2OTUsImV4cCI6MjA4Mzk3MzY5NX0.oeMe5p5pdxzWTKPwgaoWL23ZKUVUs3nApm5hHeTOO5Y";
+    private final OkHttpClient http = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         emailField = findViewById(R.id.emailField);
         passField = findViewById(R.id.passField);
+        confirmPassField = findViewById(R.id.confirmPassField);
         nameField = findViewById(R.id.nameField);
-        facultyField = findViewById(R.id.facultyField);
+        TextView loginHint = findViewById(R.id.loginHint);
+        loginHint.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
+        });
+
         btnRegister = findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(v -> {
             String email = emailField.getText().toString().trim();
             String password = passField.getText().toString().trim();
+            String confirmPassword = confirmPassField.getText().toString().trim();
             String name = nameField.getText().toString().trim();
-            String faculty = facultyField.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty() || name.isEmpty() || faculty.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Popunite sva polja", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            registerUser(email, password, name, faculty);
+            if (!password.equals(confirmPassword)) {
+                Toast.makeText(this, "Lozinke se ne podudaraju", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (password.length() < 6) {
+                Toast.makeText(this, "Lozinka mora imati barem 6 znakova", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            registerUser(email, password, name);
         });
     }
+    private void registerUser(String email, String password, String name) {
+        String url = SupabaseConfig.SUPABASE_URL + "/auth/v1/signup";
 
-    private void registerUser(String email, String password, String name, String faculty) {
-        String url = SUPABASE_URL + "/auth/v1/signup";
+        try {
+            JSONObject data = new JSONObject();
+            data.put("full_name", name);
 
-        String json = "{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}";
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            json.put("password", password);
+            json.put("data", data);
 
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(
-                json, okhttp3.MediaType.parse("application/json; charset=utf-8"));
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("apikey", SUPABASE_KEY)
-                .addHeader("Content-Type", "application/json")
-                .post(body)
-                .build();
-
-        new Thread(() -> {
-            try (okhttp3.Response response = client.newCall(request).execute()) {
-                String responseData = response.body() != null ? response.body().string() : "";
-                Log.d("SUPABASE_AUTH", "Auth Response: " + responseData);
-
-                if (response.isSuccessful() && responseData.contains("\"id\":\"")) {
-                    // Izvlačenje ID-a korisnika iz odgovora
-                    JSONObject jsonObject = new JSONObject(responseData);
-                    String accessToken = jsonObject.getString("access_token");
-                    String userId = jsonObject.getJSONObject("user").getString("id");
-
-                    //String userId = responseData.split("\"id\":\"")[1].split("\"")[0];
-                    // Sada spremi ostale podatke u profiles
-                    saveToProfiles(userId, name, faculty, email,accessToken);
-
-                } else {
-                    showToast("Registracija neuspješna: Provjerite mail ili lozinku (min. 6 znakova)");
+            RequestBody body = RequestBody.create(
+                    json.toString(),
+                    MediaType.parse("application/json; charset=utf-8")
+            );
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("apikey", SupabaseConfig.SUPABASE_ANON_KEY)
+                    .addHeader("Content-Type", "application/json")
+                    .post(body)
+                    .build();
+            http.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e(TAG, "Signup failed", e);
+                    showToast("Mrežna greška: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                showToast("Sistemska greška: " + e.getMessage());
-            }
-        }).start();
-    }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseData = response.body() != null ? response.body().string() : "";
+                    Log.d(TAG, "Signup HTTP " + response.code() + " body=" + responseData);
+                    if (!response.isSuccessful()) {
+                        String msg = "Registracija neuspješna (HTTP " + response.code() + ")";
+                        try {
+                            JSONObject err = new JSONObject(responseData);
+                            String errorDesc = err.optString("error_description", "");
+                            String message = err.optString("message", "");
+                            String msg2 = err.optString("msg", "");
+                            if (!errorDesc.isEmpty()) msg += "\n" + errorDesc;
+                            else if (!message.isEmpty()) msg += "\n" + message;
+                            else if (!msg2.isEmpty()) msg += "\n" + msg2;
+                            else msg += "\n" + responseData; //
+                        } catch (Exception e) {
+                            msg += "\n" + responseData;
+                        }
 
-    private void saveToProfiles(String userId, String name, String faculty, String email, String accessToken) {
-        // URL ide na profiles tablicu
-        String url = SUPABASE_URL + "/rest/v1/profiles";
+                        showToast(msg);
+                        return;
+                    }
 
-        String json = "{\"id\":\"" + userId + "\", \"full_name\":\"" + name + "\", \"faculty\":\"" + faculty + "\", \"email\":\"" + email + "\"}";
-
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(
-                json, okhttp3.MediaType.parse("application/json; charset=utf-8"));
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("apikey", SUPABASE_KEY)
-                .addHeader("Authorization", "Bearer " + accessToken)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Prefer", "return=minimal")
-                .post(body)
-                .addHeader("Prefer", "resolution=merge-duplicates")
-                .build();
-
-        new Thread(() -> {
-            try (okhttp3.Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
                     runOnUiThread(() -> {
-                        Toast.makeText(this, "Registracija uspješna!", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(RegisterActivity.this, ChatActivity.class));
+                        Toast.makeText(RegisterActivity.this,
+                                "Registracija uspješna! Provjeri email za potvrdu.",
+                                Toast.LENGTH_LONG).show();
+
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
                     });
-                } else {
-                    String errorLog = response.body() != null ? response.body().string() : "";
-                    Log.e("SUPABASE_PROFILES", "Profil error: " + errorLog);
-                    showToast("Greška pri spremanju profila: " + response.code());
                 }
-            } catch (Exception e) {
-                showToast("Mrežna greška u profilu: " + e.getMessage());
-            }
-        }).start();
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "JSON error", e);
+            showToast("Greška pri pripremi podataka.");
+        }
     }
-
     private void showToast(String message) {
-        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show());
+        runOnUiThread(() ->
+                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show()
+        );
     }
 }
