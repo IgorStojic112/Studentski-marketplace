@@ -87,6 +87,29 @@ public class SearchActivity extends AppCompatActivity {
         adapter = new AdsAdapter(favoritesRepository);
         rv.setAdapter(adapter);
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_search);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if(id == R.id.nav_favorites){
+                startActivity(new Intent(this,FavoriteActivity.class));
+                finish();
+            }
+            if (id == R.id.nav_search){
+                return true;
+            }else if(id == R.id.nav_chat){
+                startActivity(new Intent(this, ChatActivity.class));
+                finish();
+            }else if (id == R.id.nav_profile){
+                startActivity(new Intent(this, ProfileActivity.class));
+                finish();
+            }
+
+            return true;
+        });
+
         adapter.setOnAdActionsListener(ad -> {
             if (!AuthSession.isLoggedIn()) {
                 Toast.makeText(SearchActivity.this, "Prijavi se.", Toast.LENGTH_SHORT).show();
