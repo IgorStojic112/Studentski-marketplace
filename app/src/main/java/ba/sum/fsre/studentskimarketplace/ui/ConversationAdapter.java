@@ -85,7 +85,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             textMessage = itemView.findViewById(R.id.textMessage); // mora postojati u oba layouta
         }
     }
-
     private String safe(String s) {
         return s == null ? "" : s.trim();
     }

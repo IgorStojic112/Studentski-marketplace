@@ -40,14 +40,14 @@ public class ConversationActivity extends AppCompatActivity {
     private String adId;
     private String adTitle;
 
-    private String otherUserName = "Korisnik";
+    private String otherUserName ;
 
     private ProgressBar progress;
     private RecyclerView rv;
     private ConversationAdapter adapter;
 
     private EditText etMessage;
-    private MaterialButton btnSend;   // ✅ FIX: MaterialButton
+    private MaterialButton btnSend;
     private TextView tvHeader;
 
     private MessagesRepository repo;
@@ -123,7 +123,6 @@ public class ConversationActivity extends AppCompatActivity {
         new SupabaseRestClient().get("/profiles", q, AuthSession.accessToken, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // tiho: ostaje "Korisnik"
             }
 
             @Override

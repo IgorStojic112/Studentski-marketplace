@@ -54,7 +54,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.VH> {
         ChatRow r = items.get(position);
 
         h.tvOtherUser.setText(safe(r != null ? r.otherUserName : null, "Korisnik"));
-        h.tvAdTitle.setText(safe(r != null ? r.adTitle : null, "Oglas"));     // ✅ tvAdTitle
+        h.tvAdTitle.setText(safe(r != null ? r.adTitle : null, "Oglas"));
         h.tvLastMessage.setText(safe(r != null ? r.lastMessage : null, ""));
         h.tvTime.setText(relTime(r != null ? r.createdAt : null));
 
